@@ -12,7 +12,7 @@ use <BOSL/masks.scad>
 
 /* [Customizable Parameters] */
 
-wall_thickness=1.6;
+wall_thickness=2;
 
 bonnet_width=65.06;
 bonnet_depth=30.61;
@@ -24,12 +24,15 @@ cyberdeck_y_hole_distance=23.4;
 cyberdeck_hole_diameter=3;
 
 bonnet_deck_height=12.88;
-bonnet_deck_oled_height=15.00;
+bonnet_deck_oled_height=15.60;
 
 bonnet_oled_left=2;
 bonnet_oled_right=2;
 bonnet_oled_top=6;
 bonnet_oled_bottom=8.5;
+
+oled_visible_area_top=8;
+oled_visible_area=[60, 16];
 
 enclosure_fillet=2.5;
 
@@ -46,8 +49,8 @@ cavity_size=[
 ];
 
 panel_window_size=[
-    bonnet_width-bonnet_oled_left-bonnet_oled_right,
-    bonnet_depth-bonnet_oled_top-bonnet_oled_bottom,
+    oled_visible_area[0],
+    oled_visible_area[1],
     wall_thickness+0.01
 ];
 
@@ -59,18 +62,23 @@ bottom_opening_size=[
 
 difference()
 {
+    // main box
     cuboid(enclosure_size, fillet=enclosure_fillet, edges=EDGES_Z_BK, $fn=24, center=true);
     forward(wall_thickness+0.01)
         cuboid(cavity_size, fillet=enclosure_fillet, edges=EDGES_Z_BK, $fn=24, center=true);
+
+    // window
     up((bonnet_deck_oled_height/2)+(wall_thickness/2))
-    back(bonnet_oled_top/2)
+    back((oled_visible_area_top/2)-wall_thickness)
         cuboid(panel_window_size, fillet=enclosure_fillet/2, edges=EDGES_Z_ALL, $fn=24, center=true);
+
+    // bottom opening
     forward(wall_thickness*5)
     down((bonnet_deck_oled_height/2)+(wall_thickness/2))
         cuboid(bottom_opening_size, fillet=enclosure_fillet/2, edges=EDGES_Z_BK, $fn=24, center=true);
-}
 
-forward(wall_thickness+(cyberdeck_y_hole_distance/2))
-down((bonnet_deck_oled_height/2)-(wall_thickness/2))
-xspread(n=2, spacing=cyberdeck_x_hole_distance)
-    cyl(d=cyberdeck_hole_diameter*0.80, l=2, $fn=24, center=true);
+    forward(wall_thickness+(cyberdeck_y_hole_distance/2))
+    down((bonnet_deck_oled_height/2)+(wall_thickness/2))
+    xspread(n=2, spacing=cyberdeck_x_hole_distance)
+        cyl(d=cyberdeck_hole_diameter*0.80, l=wall_thickness+0.01, $fn=24, center=true);
+}
