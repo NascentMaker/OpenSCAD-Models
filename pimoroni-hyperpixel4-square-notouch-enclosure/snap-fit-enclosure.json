@@ -1,0 +1,13 @@
+{
+    "parameterSets": {
+        "full preview": {
+            "$fs": "0.85",
+            "caseBottomTransparency": "0.2",
+            "nextionPanelTransparency": "0.2",
+            "showCaseBottom": "true",
+            "showNextionPanel": "true"
+        }
+    },
+    "parameterSets": "",
+    "fileFormatVersion": "1"
+}
