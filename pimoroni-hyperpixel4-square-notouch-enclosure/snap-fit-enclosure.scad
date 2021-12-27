@@ -33,7 +33,7 @@ hyperpixel_gpio_x_distance=0;
 hyperpixel_header_width=51.25;
 hyperpixel_header_depth=5;
 hyperpixel_header_height=9;
-hyperpixel_header_y_offset=5;
+hyperpixel_header_y_offset=6;
 gpio_width=8;
 gpio_depth=12.70;
 gpio_height=4.10;
@@ -174,7 +174,7 @@ module snap_joints_y_spread(type="tab") {
         if (type=="tab") {
             snap_joint_tab();
         } else if (type=="hole") {
-            translate([0, 0, (cavity_size.z/3.5)]) {
+            translate([0, 0, (cavity_size.z/2.6)]) {
                 snap_joint_hole();
             }
         }
@@ -185,7 +185,7 @@ module snap_joints_y(type="tab") {
     translate([(enclosure_size.x/2)-(wall_thickness/2), 0, -(cavity_size.z/6)]) {
         snap_joints_y_spread(type);
     }
-    translate([-((enclosure_size.x/2)-(wall_thickness/2)), 0, -(cavity_size.z/12)]) {
+    translate([-((enclosure_size.x/2)-(wall_thickness/2)), 0, -(cavity_size.z/6)]) {
         mirror([1, 0, 0]) {
             snap_joints_y_spread(type);
         }
