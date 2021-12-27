@@ -30,12 +30,13 @@ hyperpixel_depth=78.25;
 hyperpixel_height=3;
 hyperpixel_bottom_pad=5;
 hyperpixel_gpio_x_distance=0;
+hyperpixel_header_width=51.25;
+hyperpixel_header_depth=5;
+hyperpixel_header_height=9;
+hyperpixel_header_y_offset=5;
 gpio_width=8;
 gpio_depth=12.70;
 gpio_height=4.10;
-header_width=40;
-header_height=8;
-header_depth=6;
 
 /*[ Enclosure parameters ]*/
 
@@ -66,7 +67,7 @@ panel_size=[
 enclosure_size=[
     hyperpixel_width+(wall_thickness*2),
     hyperpixel_depth+(wall_thickness*2),
-    hyperpixel_height+(gpio_height/2)+(plate_thickness*2)
+    hyperpixel_height+gpio_height+(plate_thickness*2)
 ];
 
 cavity_size=[
@@ -93,10 +94,10 @@ gpio_cutout_size=[
     gpio_height+(tolerance*2)
 ];
 
-header_size=[
-    header_width,
-    header_depth,
-    header_height
+hyperpixel_header_size=[
+    hyperpixel_header_width+(tolerance*2),
+    hyperpixel_header_depth+(tolerance*2),
+    hyperpixel_header_height-(tolerance*2)
 ];
 
 module snap_lip(size, edge) {
@@ -123,6 +124,16 @@ module snap_lip(size, edge) {
     }
 }
 
+module hyperpixel_header() {
+    translate([
+        -3,
+        (cavity_size.y/2)-hyperpixel_header_y_offset,
+        -(cavity_size.z)
+    ]) {
+        cuboid(hyperpixel_header_size, center=true);
+    }
+}
+
 module enclosure_snap_lip(position="top", edge="outer") {
     snap_lip(enclosure_size, edge);
 }
@@ -143,7 +154,7 @@ module snap_joint_tab() {
             cuboid([
                 (wall_thickness/4)-(tolerance/4)+layer_diff,
                 snap_joint_width-(tolerance/2),
-                (enclosure_size.z/8)-(tolerance/4)
+                (enclosure_size.z/8)-(tolerance)
             ], center=true);
             right(0.25) {
                 mirror([1, 0, 1]) {
@@ -171,10 +182,10 @@ module snap_joints_y_spread(type="tab") {
 }
 
 module snap_joints_y(type="tab") {
-    translate([(enclosure_size.x/2)-(wall_thickness/2), 0, -(cavity_size.z/8)]) {
+    translate([(enclosure_size.x/2)-(wall_thickness/2), 0, -(cavity_size.z/6)]) {
         snap_joints_y_spread(type);
     }
-    translate([-((enclosure_size.x/2)-(wall_thickness/2)), 0, -(cavity_size.z/8)]) {
+    translate([-((enclosure_size.x/2)-(wall_thickness/2)), 0, -(cavity_size.z/12)]) {
         mirror([1, 0, 0]) {
             snap_joints_y_spread(type);
         }
@@ -204,8 +215,9 @@ module shell() {
         // main box
         cuboid(enclosure_size, fillet=enclosure_fillet, edges=EDGES_Z_ALL, center=true);
         cuboid(cavity_size, edges=EDGES_Z_ALL, center=true);
+        hyperpixel_header();
         // screen
-        translate([0, hyperpixel_bottom_pad/2, plate_thickness])
+        translate([0, hyperpixel_bottom_pad/2, plate_thickness*2])
             cuboid(screen_cutout_size, fillet=enclosure_fillet/2, edges=EDGES_Z_ALL, center=true);
     }
 }
@@ -260,6 +272,4 @@ if (split_into_parts==true) {
 
 if ($preview) {
     color("green", 0.4) gpio_module(gpio_size);
-    color("yellow", 0.3) {
-    }
 }
