@@ -30,10 +30,10 @@ hyperpixel_depth=78.25;
 hyperpixel_height=3;
 hyperpixel_bottom_pad=5;
 hyperpixel_gpio_x_distance=0;
-hyperpixel_header_width=51.25;
-hyperpixel_header_depth=5;
+hyperpixel_header_width=56;
+hyperpixel_header_depth=5.40;
 hyperpixel_header_height=9;
-hyperpixel_header_y_offset=6;
+hyperpixel_header_y_offset=7;
 gpio_width=8;
 gpio_depth=12.70;
 gpio_height=4.10;
@@ -67,13 +67,13 @@ panel_size=[
 enclosure_size=[
     hyperpixel_width+(wall_thickness*2),
     hyperpixel_depth+(wall_thickness*2),
-    hyperpixel_height+gpio_height+(plate_thickness*2)
+    hyperpixel_height+gpio_height+(tolerance*2)+(plate_thickness*2)
 ];
 
 cavity_size=[
     hyperpixel_width+(tolerance*2),
     hyperpixel_depth+(tolerance*2),
-    hyperpixel_height+(gpio_height/2)+(tolerance*2)
+    hyperpixel_height+gpio_height+(tolerance*2)
 ];
 
 screen_cutout_size=[
@@ -97,7 +97,7 @@ gpio_cutout_size=[
 hyperpixel_header_size=[
     hyperpixel_header_width+(tolerance*2),
     hyperpixel_header_depth+(tolerance*2),
-    hyperpixel_header_height-(tolerance*2)
+    hyperpixel_header_height+(tolerance*2)
 ];
 
 module snap_lip(size, edge) {
@@ -126,11 +126,21 @@ module snap_lip(size, edge) {
 
 module hyperpixel_header() {
     translate([
-        -3,
+        -5,
         (cavity_size.y/2)-hyperpixel_header_y_offset,
-        -(cavity_size.z)
+        -(cavity_size.z/2)
     ]) {
         cuboid(hyperpixel_header_size, center=true);
+    }
+}
+
+module hyperpixel_mount_towers() {
+    translate([-5, 8.12, -((cavity_size.z/2)-layer_diff)]) {
+        yspread(l=49, n=2) {
+            xspread(l=58, n=2) {
+                downcyl(l=plate_thickness+(layer_diff*2), d=5.40+(tolerance*2));
+            }
+        }
     }
 }
 
@@ -139,7 +149,7 @@ module enclosure_snap_lip(position="top", edge="outer") {
 }
 
 module snap_joint_hole() {
-    right(0.5-layer_diff) {
+    right(tolerance-layer_diff) {
         cube([
             (wall_thickness/4)+layer_diff,
             snap_joint_width+layer_diff,
@@ -174,7 +184,7 @@ module snap_joints_y_spread(type="tab") {
         if (type=="tab") {
             snap_joint_tab();
         } else if (type=="hole") {
-            translate([0, 0, (cavity_size.z/2.6)]) {
+            translate([0, 0, (cavity_size.z/2)-((enclosure_size.z/8)+layer_diff)]) {
                 snap_joint_hole();
             }
         }
@@ -215,6 +225,7 @@ module shell() {
         // main box
         cuboid(enclosure_size, fillet=enclosure_fillet, edges=EDGES_Z_ALL, center=true);
         cuboid(cavity_size, edges=EDGES_Z_ALL, center=true);
+        hyperpixel_mount_towers();
         hyperpixel_header();
         // screen
         translate([0, hyperpixel_bottom_pad/2, plate_thickness*2])
