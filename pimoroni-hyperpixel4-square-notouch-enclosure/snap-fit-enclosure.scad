@@ -13,40 +13,75 @@ use <../libraries/BOSL/masks.scad>
 /*[ Render settings ]*/
 
 // Quality of rounded corners
-$fn = 18;
+$fn=18;
 
 /*[ 3D-printing tools ]*/
 
-// Split the case up so that it can be printed on 220x220mm printers
-split_into_parts = true;
+// Split the case up so that it can snap together
+split_into_parts=true;
 
 // Split the case by this many mm
-split_enclosure_by_mm = 50;
+split_enclosure_by_mm=50;
 
 /*[ HyperPixel dimensions ]*/
 
+// width of HyperPixel4 PCB and screen
 hyperpixel_width=74.25;
+
+// depth of the HyperPixel4 PCB and screen
 hyperpixel_depth=78.25;
+
+// height of the HyperPixel4 PCB and screen
 hyperpixel_height=3;
+
+// depth of the bottom screen cover
 hyperpixel_bottom_pad=5;
-hyperpixel_gpio_x_distance=0;
+
+// width of 40-pin header
 hyperpixel_header_width=56;
+
+// depth of 40-pin header
 hyperpixel_header_depth=5.40;
+
+// height of 40-pin header
 hyperpixel_header_height=9;
+
+// header offset depth
 hyperpixel_header_y_offset=7;
+
+// GPIO module width
 gpio_width=8;
+
+// GPIO module depth
 gpio_depth=12.70;
+
+// GPIO module height off of the PCB
 gpio_height=4.10;
 
 /*[ Enclosure parameters ]*/
 
+// overall wall thickness
 wall_thickness=4;
+
+// top and bottom plate thickness
 plate_thickness=1.16;
+
+// round corners
 enclosure_fillet=2;
+
+// how long are the snap joint tabs
 snap_joint_width=5;
 
 // tolerance of fitting around HyperPixel
 tolerance=0.50;
+
+/*[ Preview Settings ]*/
+
+// hide or show the case parts
+show_case_parts=true;
+
+// hide or show the hyperpixel preview
+show_hyperpixel_preview=false;
 
 /*
  * ______________________________________________________________
@@ -59,27 +94,10 @@ layer_diff=1*0.01;
 
 gpio_y_offset=(43.25-gpio_depth+(gpio_depth/2))-(hyperpixel_depth/2);
 
-panel_size=[
+hyperpixel_size=[
     hyperpixel_width,
+    hyperpixel_depth,
     hyperpixel_height
-];
-
-enclosure_size=[
-    hyperpixel_width+(wall_thickness*2),
-    hyperpixel_depth+(wall_thickness*2),
-    hyperpixel_height+gpio_height+(tolerance*2)+(plate_thickness*2)
-];
-
-cavity_size=[
-    hyperpixel_width+(tolerance*2),
-    hyperpixel_depth+(tolerance*2),
-    hyperpixel_height+gpio_height+(tolerance*2)
-];
-
-screen_cutout_size=[
-    hyperpixel_width-wall_thickness,
-    hyperpixel_depth-wall_thickness-hyperpixel_bottom_pad,
-    cavity_size.z+layer_diff
 ];
 
 gpio_size=[
@@ -89,9 +107,27 @@ gpio_size=[
 ];
 
 gpio_cutout_size=[
-    gpio_width+(tolerance*2),
-    gpio_depth+(tolerance*2),
-    gpio_height+(tolerance*2)
+    gpio_size.x+(tolerance*2),
+    gpio_size.y+(tolerance*2),
+    gpio_size.z+(tolerance*2)
+];
+
+enclosure_size=[
+    hyperpixel_size.x+(wall_thickness*2),
+    hyperpixel_size.y+(wall_thickness*2),
+    hyperpixel_size.z+gpio_size.z+(tolerance*2)+(plate_thickness*2)
+];
+
+cavity_size=[
+    hyperpixel_size.x+(tolerance*2),
+    hyperpixel_size.y+(tolerance*2),
+    hyperpixel_size.z+gpio_size.z+(tolerance*2)
+];
+
+screen_cutout_size=[
+    hyperpixel_size.x-wall_thickness,
+    hyperpixel_size.y-wall_thickness-hyperpixel_bottom_pad,
+    cavity_size.z+layer_diff
 ];
 
 hyperpixel_header_size=[
@@ -131,6 +167,16 @@ module hyperpixel_header() {
         -(cavity_size.z/2)
     ]) {
         cuboid(hyperpixel_header_size, center=true);
+    }
+}
+
+module hyperpixel_standoffs() {
+    translate([0, -4, -(((cavity_size.z-gpio_size.z)/2)-layer_diff)]) {
+        yspread(l=49, n=2) {
+            xspread(l=58, n=2) {
+                cyl(l=gpio_size.z+(layer_diff*2), d=3+(tolerance*2), center=true);
+            }
+        }
     }
 }
 
@@ -212,12 +258,17 @@ module snap_joints(type="tab") {
 
 module gpio_module(size) {
     translate([
-        ((panel_size.x-gpio_size.x)/2)-2.9,
+        -((hyperpixel_size.x-gpio_size.x)/2)+2.9,
         gpio_y_offset,
-        -((hyperpixel_height/2)+(gpio_size.z/2)-(cavity_size.z/2))
+        -(hyperpixel_size.z/2)
     ]) {
         cube(size, center=true);
     }
+}
+
+module hyperpixel_module(size) {
+    up(gpio_size.z/2)
+        cube(size, center=true);
 }
 
 module shell() {
@@ -259,6 +310,7 @@ module generate_parts() {
         enclosure_snap_lip(position="top", edge="outer");
         enclosure_separator();
     }
+    hyperpixel_standoffs();
     snap_joints(type="tab");
 
     translate([0, 0, split_enclosure_by_mm]) {
@@ -275,12 +327,15 @@ module generate_parts() {
     enclosure_joiners();
 }
 
-if (split_into_parts==true) {
-    generate_parts();
-} else {
-    enclosure();
+if (show_case_parts==true) {
+    if (split_into_parts==true) {
+        generate_parts();
+    } else {
+        enclosure();
+    }
 }
 
-if ($preview) {
+if ($preview==true && show_hyperpixel_preview==true) {
     color("green", 0.4) gpio_module(gpio_size);
+    color("gray", 0.3) hyperpixel_module(hyperpixel_size);
 }
