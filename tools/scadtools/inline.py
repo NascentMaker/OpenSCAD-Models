@@ -15,7 +15,7 @@ class Inline(Command):
 
     def get_parser(self, prog_name):
         parser = super(Inline, self).get_parser(prog_name)
-        parser.add_argument('filename', nargs='?', default='.')
+        parser.add_argument('filename', nargs='?')
         return parser
 
     def scan_file(self, filename):
