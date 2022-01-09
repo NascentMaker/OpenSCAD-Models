@@ -9,17 +9,13 @@
  * https://creativecommons.org/licenses/by-sa/4.0/.
  */
 
-include <../libraries/BOSL/constants.scad>
-use <../libraries/BOSL/shapes.scad>
-use <../libraries/BOSL/transforms.scad>
-
 /*                __             _
  *  ______ _____ / /____  __ _  (_)__ ___ ____
  * / __/ // (_-</ __/ _ \/  ' \/ /_ // -_) __/
  * \__/\_,_/___/\__/\___/_/_/_/_//__/\__/_/
  */
 
-/*[ Render settings ]*/
+/*[ Global ]*/
 
 // Quality of rounded corners
 $fn=24;
@@ -33,7 +29,7 @@ show_jetson_nano=true;
 /*[ 3D-printing tools ]*/
 
 // Split the case into parts that can be printed
-split_into_parts=false;
+split_into_parts=true;
 
 // Gap between parts, in mm
 split_gap=50;
@@ -59,16 +55,22 @@ nano_size_no_underside=[nano_size.x, nano_size.y, 28.35];
 fan_size=[40, 40, 20];
 
 // PCB screw size, in mm
-pcb_screw_M_size=2.5;
+pcb_screw_M_size=2.5; // [2, 2.5, 3, 4]
 
 // PCB standoff height, in mm
-pcb_standoff_height=6;
+pcb_standoff_height=6; // [3:10]
 
 /*    __       __        __   __  __  __                     __
  *   / /  ___ / /  ___  / /__/ / / /_/ /  ___   _______  ___/ /__
  *  / _ \/ -_) _ \/ _ \/ / _  / / __/ _ \/ -_) / __/ _ \/ _  / -_)
  * /_.__/\__/_//_/\___/_/\_,_/  \__/_//_/\__/  \__/\___/\_,_/\__/
  */
+
+/* [Hidden] */
+
+include <../libraries/BOSL/constants.scad>
+use <../libraries/BOSL/shapes.scad>
+use <../libraries/BOSL/transforms.scad>
 
 enclosure_size=[
     nano_size.x+(wall_thickness*2)+tolerance,
