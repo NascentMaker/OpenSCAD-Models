@@ -233,6 +233,14 @@ module enclosure_separator(intersect=false) {
                 left_lip_height
             ]);
         }
+        front_shift=20.21;
+        translate([0, 0, -front_shift+(layer_diff*2)]) {
+            cube([
+                enclosure_size.x-(side_wall_thickness*2),
+                wall_thickness+(layer_diff*2),
+                front_shift+(layer_diff*2)
+            ]);
+        }
     }
 }
 
