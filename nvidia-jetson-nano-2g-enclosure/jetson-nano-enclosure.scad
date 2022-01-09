@@ -159,8 +159,12 @@ module vent_cutouts() {
         }
     }
     // top vent cutout
-    translate([(enclosure_size.x/2)-3, (enclosure_size.y/2)+15, enclosure_size.z-wall_thickness-layer_diff]) {
+    translate([(enclosure_size.x/2)-2, (enclosure_size.y/2)+19, enclosure_size.z-wall_thickness-layer_diff]) {
         vent_cutout(h=side_wall_thickness+(layer_diff*2), d=7, area=20, spacing=1.5);
+    }
+    // bottom vent cutout
+    translate([(enclosure_size.x/2), (enclosure_size.y/2), -layer_diff]) {
+        vent_cutout(h=side_wall_thickness+(layer_diff*2), d=7, area=30, spacing=1.5);
     }
 }
 
@@ -202,10 +206,11 @@ module port_cutouts(preview_depth=1) {
     }
 }
 
-module enclosure_separator() {
+module enclosure_separator(intersect=false) {
     z_offset=enclosure_size.z/2;
-    left_lip_height=18;
-    right_lip_height=18;
+    left_lip_height=intersect==true?18-(tolerance/2):18;
+    right_lip_height=intersect==true?18+(tolerance/2):18;
+    modifier=(intersect==true?(tolerance/2):0);
     translate([-layer_diff, -layer_diff, z_offset]) {
         difference() {
             cube([
@@ -213,17 +218,17 @@ module enclosure_separator() {
                 enclosure_size.y+(layer_diff*2), // depth
                 z_offset+(layer_diff*2) // height
             ], center=false);
-            translate([enclosure_size.x-wall_thickness, wall_thickness, -layer_diff]) {
+            translate([enclosure_size.x-wall_thickness+layer_diff-modifier, wall_thickness, -layer_diff]) {
                 cube([
-                    wall_thickness+(layer_diff*2),
+                    wall_thickness+layer_diff+modifier,
                     enclosure_size.y-(wall_thickness*2),
                     right_lip_height
                 ]);
             }
         }
-        translate([0, wall_thickness, -left_lip_height+layer_diff]) {
+        translate([-layer_diff, wall_thickness, -left_lip_height+layer_diff]) {
             cube([
-                wall_thickness+(layer_diff*2),
+                wall_thickness+layer_diff-modifier,
                 enclosure_size.y-(wall_thickness*2),
                 left_lip_height
             ]);
@@ -260,7 +265,7 @@ module generate_parts() {
     joiner_slop=0.4;
     difference() {
         enclosure();
-        enclosure_separator();
+        enclosure_separator(intersect=false);
     }
 
     translate([0, 0, split_gap]) {
@@ -268,7 +273,7 @@ module generate_parts() {
             difference() {
                 shell();
             }
-            enclosure_separator();
+            enclosure_separator(intersect=true);
         }
     }
 
@@ -290,6 +295,6 @@ if (show_case_parts==true) {
     if (split_into_parts==true) {
         generate_parts();
     } else {
-        enclosure();
+        color("white", 0.03) enclosure();
     }
 }
