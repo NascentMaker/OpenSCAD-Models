@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "scadtools"
 version = "0.1.0"
-description = "OpenSCAD models created by NascentMaker."
+description = "OpenSCAD tools written in Python."
 authors = ["NascentMaker <hello@nascentmaker.com>"]
 maintainers = [
     "NascentMaker <hello@nascentmaker.com>",
