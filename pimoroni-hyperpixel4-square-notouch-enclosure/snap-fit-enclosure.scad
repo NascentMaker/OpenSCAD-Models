@@ -1,16 +1,21 @@
-/*
+/*     _   __                           __  __  ___      __
+ *    / | / /___ ______________  ____  / /_/  |/  /___ _/ /_____  _____
+ *   /  |/ / __ `/ ___/ ___/ _ \/ __ \/ __/ /|_/ / __ `/ //_/ _ \/ ___/
+ *  / /|  / /_/ (__  ) /__/  __/ / / / /_/ /  / / /_/ / ,< /  __/ /
+ * /_/ |_/\__,_/____/\___/\___/_/ /_/\__/_/  /_/\__,_/_/|_|\___/_/
+ *
  * This work is licensed under the Creative Commons Attribution-ShareAlike
  * 4.0 International License. To view a copy of this license, visit
  * https://creativecommons.org/licenses/by-sa/4.0/.
  */
 
-include <../libraries/BOSL/constants.scad>
-use <../libraries/BOSL/metric_screws.scad>
-use <../libraries/BOSL/shapes.scad>
-use <../libraries/BOSL/transforms.scad>
-use <../libraries/BOSL/masks.scad>
+/*                __             _
+ *  ______ _____ / /____  __ _  (_)__ ___ ____
+ * / __/ // (_-</ __/ _ \/  ' \/ /_ // -_) __/
+ * \__/\_,_/___/\__/\___/_/_/_/_//__/\__/_/
+ */
 
-/*[ Render settings ]*/
+/*[ Global ]*/
 
 // Quality of rounded corners
 $fn=18;
@@ -83,12 +88,19 @@ show_case_parts=true;
 // hide or show the hyperpixel preview
 show_hyperpixel_preview=false;
 
-/*
- * ______________________________________________________________
- * ==============================================================
- *  DO NOT EDIT ANYTHING BELOW UNLESS YOU KNOW WHAT YOU'RE DOING
- * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*    __       __        __   __  __  __                     __
+ *   / /  ___ / /  ___  / /__/ / / /_/ /  ___   _______  ___/ /__
+ *  / _ \/ -_) _ \/ _ \/ / _  / / __/ _ \/ -_) / __/ _ \/ _  / -_)
+ * /_.__/\__/_//_/\___/_/\_,_/  \__/_//_/\__/  \__/\___/\_,_/\__/
  */
+
+/* [Hidden] */
+
+include <../libraries/BOSL/constants.scad>
+use <../libraries/BOSL/metric_screws.scad>
+use <../libraries/BOSL/shapes.scad>
+use <../libraries/BOSL/transforms.scad>
+use <../libraries/BOSL/masks.scad>
 
 layer_diff=1*0.01;
 

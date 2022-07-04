@@ -1,14 +1,19 @@
-/*
+/*     _   __                           __  __  ___      __
+ *    / | / /___ ______________  ____  / /_/  |/  /___ _/ /_____  _____
+ *   /  |/ / __ `/ ___/ ___/ _ \/ __ \/ __/ /|_/ / __ `/ //_/ _ \/ ___/
+ *  / /|  / /_/ (__  ) /__/  __/ / / / /_/ /  / / /_/ / ,< /  __/ /
+ * /_/ |_/\__,_/____/\___/\___/_/ /_/\__/_/  /_/\__,_/_/|_|\___/_/
+ *
  * This work is licensed under the Creative Commons Attribution-ShareAlike
  * 4.0 International License. To view a copy of this license, visit
  * https://creativecommons.org/licenses/by-sa/4.0/.
  */
 
-include <BOSL/constants.scad>
-use <BOSL/metric_screws.scad>
-use <BOSL/shapes.scad>
-use <BOSL/transforms.scad>
-use <BOSL/masks.scad>
+/*                __             _
+ *  ______ _____ / /____  __ _  (_)__ ___ ____
+ * / __/ // (_-</ __/ _ \/  ' \/ /_ // -_) __/
+ * \__/\_,_/___/\__/\___/_/_/_/_//__/\__/_/
+ */
 
 /* [Customizable Parameters] */
 
@@ -35,6 +40,18 @@ oled_visible_area_top=8;
 oled_visible_area=[60, 16];
 
 enclosure_fillet=2.5;
+
+/*    __       __        __   __  __  __                     __
+ *   / /  ___ / /  ___  / /__/ / / /_/ /  ___   _______  ___/ /__
+ *  / _ \/ -_) _ \/ _ \/ / _  / / __/ _ \/ -_) / __/ _ \/ _  / -_)
+ * /_.__/\__/_//_/\___/_/\_,_/  \__/_//_/\__/  \__/\___/\_,_/\__/
+ */
+
+/* [Hidden] */
+
+include <BOSL/constants.scad>
+use <BOSL/shapes.scad>
+use <BOSL/transforms.scad>
 
 enclosure_size=[
     cyberdeck_width+(wall_thickness*2),

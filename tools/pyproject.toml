@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "scadtools"
+version = "0.1.0"
+description = "OpenSCAD tools written in Python."
+authors = ["NascentMaker <hello@nascentmaker.com>"]
+maintainers = [
+    "NascentMaker <hello@nascentmaker.com>",
+    "Torgny Bjers <torgny@hey.com>"
+]
+license = "CC-BY-SA-4.0"
+readme = "README.rst"
+packages = [
+    { include =  "scadtools" }
+]
+include = ["README.rst"]
+
+[tool.poetry.scripts]
+scadtools = "scadtools.main:main"
+
+[tool.poetry.plugins."cliff.scadtools"]
+inline = "scadtools.inline:Inline"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+cliff = "^3.10.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
