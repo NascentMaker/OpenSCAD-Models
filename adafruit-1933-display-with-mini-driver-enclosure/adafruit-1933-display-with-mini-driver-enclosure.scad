@@ -28,7 +28,7 @@ enclosure_tolerance = 1.0; // [0.5, 0.75, 1, 1.25, 1.50, 1.75, 2]
 // Enclosure wall depth
 enclosure_wall_thickness = 5.0;
 // Dimensions of the breakout button PCB
-button_pcb_dimensions = [30, 80];
+button_pcb_dimensions = [75.25, 16.25];
 
 /* [Preview Settings] */
 
@@ -51,7 +51,7 @@ use <../libraries/BOSL/math.scad>
 
 m_pad = enclosure_tolerance * 2;
 e_pad = enclosure_tolerance + enclosure_wall_thickness;
-extern_size = [module_size[0]+(e_pad*2)+(button_pcb_dimensions[0]), module_size[1]+(e_pad*2), module_thickness+(e_pad*2)];
+extern_size = [module_size[0]+(e_pad*2)+(m_pad*2), module_size[1]+(e_pad*2)+(button_pcb_dimensions[1]*2), module_thickness+(e_pad*2)];
 
 module display_aperture() {
     n_size=[display_active_area_size[0]+m_pad, display_active_area_size[1]+m_pad, module_thickness+m_pad];
@@ -66,7 +66,7 @@ module enclosure() {
     difference() {
         cuboid(size=extern_size, fillet=2.5, edges=EDGES_Z_ALL, center=false, $fn=24);
         translate([e_pad, e_pad, e_pad]) {
-            cuboid(size=[module_size[0]+m_pad+(button_pcb_dimensions[0]), module_size[1]+m_pad, module_thickness+m_pad], fillet=0.75, edges=EDGES_Z_ALL, center=false, $fn=24);
+            cuboid(size=[module_size[0]+m_pad, module_size[1]+(button_pcb_dimensions[1]*2), module_thickness+m_pad], fillet=0.75, edges=EDGES_Z_ALL, center=false, $fn=24);
             translate([enclosure_tolerance+2, e_pad+enclosure_tolerance, module_thickness+0.01]) {
                 display_aperture();
             }
@@ -101,11 +101,15 @@ module generate_parts() {
 generate_parts();
 
 if ($preview==true) {
-    translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance, e_pad+0.01]) {
-        color("green", 0.25)
-        cuboid(size=concat(module_size, module_thickness), $fn=24, center=false);
-        translate([4, 10, module_thickness+0.01])
-        color("black", 0.1)
-        cuboid(size=concat(display_active_area_size, 1), $fn=24, center=false);
+    group("display") {
+        translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance, e_pad+0.01]) {
+            color("green", 0.25)
+            cuboid(size=concat(module_size, module_thickness), $fn=24, center=false);
+            translate([4, 10, module_thickness+0.01])
+            color("black", 0.1)
+            cuboid(size=concat(display_active_area_size, 1), $fn=24, center=false);
+        }
+    }
+    group("controls") {
     }
 }
