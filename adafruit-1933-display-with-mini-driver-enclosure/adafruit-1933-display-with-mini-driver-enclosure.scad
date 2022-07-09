@@ -67,7 +67,7 @@ module enclosure() {
         cuboid(size=extern_size, fillet=2.5, edges=EDGES_Z_ALL, center=false, $fn=24);
         translate([e_pad, e_pad, e_pad]) {
             cuboid(size=[module_size[0]+m_pad, module_size[1]+(button_pcb_dimensions[1]*2), module_thickness+m_pad], fillet=0.75, edges=EDGES_Z_ALL, center=false, $fn=24);
-            translate([enclosure_tolerance+2, e_pad+enclosure_tolerance, module_thickness+0.01]) {
+            translate([enclosure_tolerance+2, e_pad+enclosure_tolerance+(button_pcb_dimensions[1]*2), module_thickness+0.01]) {
                 display_aperture();
             }
         }
@@ -102,7 +102,7 @@ generate_parts();
 
 if ($preview==true) {
     group("display") {
-        translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance, e_pad+0.01]) {
+        translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance+(button_pcb_dimensions[1]*2), e_pad+0.01]) {
             color("green", 0.25)
             cuboid(size=concat(module_size, module_thickness), $fn=24, center=false);
             translate([4, 10, module_thickness+0.01])
