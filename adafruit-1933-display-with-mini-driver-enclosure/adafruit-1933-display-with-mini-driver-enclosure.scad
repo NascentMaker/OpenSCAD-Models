@@ -36,6 +36,8 @@ button_pcb_dimensions = [75.25, 16.25];
 preview_parts = true;
 // Display screen module placeholder
 preview_screen_module = true;
+// Display button PCB placeholder
+preview_button_pcb = true;
 
 /*    __       __        __   __  __  __                     __
  *   / /  ___ / /  ___  / /__/ / / /_/ /  ___   _______  ___/ /__
@@ -115,5 +117,11 @@ if ($preview==true) {
         }
     }
     group("controls") {
+        if (preview_button_pcb==true) {
+            translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance, e_pad+0.01]) {
+                color("green", 0.25)
+                cuboid(size=concat(button_pcb_dimensions, 4), $fn=24, center=false);
+            }
+        }
     }
 }
