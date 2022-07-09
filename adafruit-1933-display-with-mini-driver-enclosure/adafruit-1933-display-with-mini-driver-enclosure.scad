@@ -34,6 +34,8 @@ button_pcb_dimensions = [75.25, 16.25];
 
 // Split enclosure into parts
 preview_parts = true;
+// Display screen module placeholder
+preview_screen_module = true;
 
 /*    __       __        __   __  __  __                     __
  *   / /  ___ / /  ___  / /__/ / / /_/ /  ___   _______  ___/ /__
@@ -102,12 +104,14 @@ generate_parts();
 
 if ($preview==true) {
     group("display") {
-        translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance+(button_pcb_dimensions[1]*2), e_pad+0.01]) {
-            color("green", 0.25)
-            cuboid(size=concat(module_size, module_thickness), $fn=24, center=false);
-            translate([4, 10, module_thickness+0.01])
-            color("black", 0.1)
-            cuboid(size=concat(display_active_area_size, 1), $fn=24, center=false);
+        if (preview_screen_module==true) {
+            translate([e_pad+enclosure_tolerance, e_pad+enclosure_tolerance+(button_pcb_dimensions[1]*2), e_pad+0.01]) {
+                color("green", 0.25)
+                cuboid(size=concat(module_size, module_thickness), $fn=24, center=false);
+                translate([4, 10, module_thickness+0.01])
+                color("black", 0.1)
+                cuboid(size=concat(display_active_area_size, 1), $fn=24, center=false);
+            }
         }
     }
     group("controls") {
