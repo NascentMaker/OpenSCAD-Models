@@ -1,0 +1,16 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "button_pcb_dimensions": "[75.25, 16.25]",
+            "display_active_area_size": "[154.08, 85.92]",
+            "enclosure_tolerance": "1",
+            "enclosure_wall_thickness": "5",
+            "module_size": "[164.9, 100]",
+            "module_thickness": "5.7",
+            "preview_button_pcb": "true",
+            "preview_parts": "true",
+            "preview_screen_module": "true"
+        }
+    },
+    "fileFormatVersion": "1"
+}
